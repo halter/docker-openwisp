@@ -2,7 +2,7 @@
 FROM kylemanna/openvpn:2.4
 
 RUN apk add --no-cache \
-            tzdata~=2022a-r0 \
+            tzdata \
             postgresql-client~=12.10-r0 \
             supervisor~=4.2.0-r0 && \
     rm -rf /var/cache/apk/* /tmp/*
