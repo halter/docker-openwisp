@@ -27,7 +27,7 @@ ENV PYTHONPATH=/home/openwisp/.local/lib/python3.10/site-packages
 
 RUN pip install --no-cache-dir  --user --upgrade pip~=23.0.1
 # TODO: Remove when next version of openwisp-monitoring is released
-ARG OPENWISP_MONITORING_SOURCE=https://github.com/halter/openwisp-monitoring/tarball/f24d2ddfbdf1a77e0758fbaf6e8f7f10c536a9cc
+ARG OPENWISP_MONITORING_SOURCE=https://github.com/halter/openwisp-monitoring/tarball/b17292508ac3741b650b924794f5931ac53f2042
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir --user --upgrade ${OPENWISP_MONITORING_SOURCE}
 ARG OPENWISP_FIRMWARE_SOURCE=https://github.com/openwisp/openwisp-firmware-upgrader/tarball/f1b0397944489db857cde986c2933675b3758001
