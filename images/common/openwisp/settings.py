@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 
+import tldextract
 from openwisp.utils import (
     env_bool,
     is_string_env_bool,
@@ -28,8 +29,8 @@ for config in os.environ:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 DEBUG = env_bool(os.environ['DEBUG_MODE'])
-ROOT_DOMAIN = f'.{".".join(os.environ["DASHBOARD_DOMAIN"].split(".")[1:])}'
 MAX_REQUEST_SIZE = int(os.environ['NGINX_CLIENT_BODY_SIZE']) * 1024 * 1024
+ROOT_DOMAIN = '.' + tldextract.extract(os.environ["DASHBOARD_DOMAIN"]).registered_domain
 INSTALLED_APPS = []
 
 if 'DJANGO_ALLOWED_HOSTS' not in os.environ:
@@ -42,7 +43,7 @@ ALLOWED_HOSTS = [
 ] + os.environ['DJANGO_ALLOWED_HOSTS'].split(',')
 
 OPENWISP_RADIUS_FREERADIUS_ALLOWED_HOSTS = os.environ[
-    'DJANGO_FREERADIUS_ALLOWED_HOSTS'
+    'OPENWISP_RADIUS_FREERADIUS_ALLOWED_HOSTS'
 ].split(',')
 
 AUTH_USER_MODEL = 'openwisp_users.User'
@@ -265,7 +266,7 @@ EMAIL_PORT = os.environ['EMAIL_HOST_PORT']
 EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_USE_TLS = env_bool(os.environ['EMAIL_HOST_TLS'])
-EMAIL_TIMEOUT = os.environ['EMAIL_TIMEOUT']
+EMAIL_TIMEOUT = int(os.environ['EMAIL_TIMEOUT'])
 
 # Logging
 # http://docs.djangoproject.com/en/dev/topics/logging
@@ -357,6 +358,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
+TEST_RUNNER = 'openwisp_utils.metric_collection.tests.runner.MockRequestPostRunner'
+
 # Add Custom OpenWRT Images for openwisp firmware
 try:
     OPENWRT_IMAGES = json.loads(os.environ['OPENWISP_CUSTOM_OPENWRT_IMAGES'])
@@ -410,6 +413,8 @@ if not env_bool(os.environ['USE_OPENWISP_MONITORING']):
         INSTALLED_APPS.remove('openwisp_monitoring.check')
 if EMAIL_BACKEND == 'djcelery_email.backends.CeleryEmailBackend':
     INSTALLED_APPS.append('djcelery_email')
+if env_bool(os.environ.get('METRIC_COLLECTION', 'True')):
+    INSTALLED_APPS.append('openwisp_utils.metric_collection')
 
 try:
     from .configuration.custom_django_settings import *  # noqa: F403, F401

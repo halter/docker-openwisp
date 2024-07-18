@@ -19,7 +19,7 @@ jobs:
       - name: Install Testing Requirements
         run: |
           sudo pip install -r requirements-test.txt
-          sudo curl -sL -o /bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64"
+          sudo curl -sL -o /bin/hadolint "https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64"
           sudo chmod +x /bin/hadolint
 
       - name: QA checks
@@ -28,11 +28,13 @@ jobs:
       - name: Setup
         run: |
           echo "127.0.0.1 dashboard.openwisp.org api.openwisp.org" | sudo tee -a /etc/hosts
+          # disable metric collection during builds
+          sed -i 's/METRIC_COLLECTION=True/METRIC_COLLECTION=False/' .env
 
       - name: Build Images
         run: make compose-build nfs-build
 
       - name: Test
-        run: make runtests || (docker-compose logs && exit 1)
+        run: make runtests || (docker compose logs && exit 1)
         env:
           SELENIUM_HEADLESS: 1

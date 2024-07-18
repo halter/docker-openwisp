@@ -7,7 +7,7 @@
 
 The OpenWISP docker images are created with customization in mind. You can simply change the environment variables to change the containers and trailer them to your needs.
 
-- `docker-compose`: You can simply change the values in `.env` file.
+- `docker compose`: You can simply change the values in `.env` file.
 - `kubernetes`: You need to create `ConfigMap` to change the environment variables. An example is present in `deploy/examples/kubernetes/` directory.
 
 Following are the options that can be changed. The list is divided in following sections:
@@ -101,7 +101,7 @@ Additionally, you can search for the following:
 - **Default:** <your-dashboard-domains>
 - **Example:** .openwisp.org,.example.org,www.example.com
 
-### `DJANGO_FREERADIUS_ALLOWED_HOSTS`
+### `OPENWISP_RADIUS_FREERADIUS_ALLOWED_HOSTS`
 
 - **Explanation:** Default IP address or subnet of your freeradius instance.
 - **Valid Values:** List(IP adress) | Subnet
@@ -164,6 +164,12 @@ Any OpenWISP Configuration of type `string`. `int`, `bool` or `json` is supporte
 - **Valid Values:** JSON
 - **Default:** None
 - **Example:** [{"name": "Name1","label": "Label1","boards": ["TestA", "TestB"]}, {"name": "Name2","label": "Label2","boards": ["TestC", "TestD"]}]
+
+### `METRIC_COLLECTION`
+
+- **Explanation:** Whether the usage metric collection feature of openwisp-utils is enabled or not.
+- **Valid Values:** True | False
+- **Default:** True
 
 ## Database
 
@@ -526,7 +532,7 @@ Any OpenWISP Configuration of type `string`. `int`, `bool` or `json` is supporte
 - **Valid Values:** INT
 - **Default:** 365
 
-### `CRON_DELETE_OLD_USERS`
+### `CRON_DELETE_OLD_RADIUSBATCH_USERS`
 
 - **Explanation:** (Value in months) Deactivates expired user accounts which were created temporarily and have an expiration date set.
 - **Valid Values:** INT
