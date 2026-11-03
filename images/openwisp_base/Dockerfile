@@ -1,5 +1,8 @@
 FROM python:3.13-slim-bullseye AS system
 
+RUN grep -rl "deb.debian.org/debian-security" /etc/apt/sources.list /etc/apt/sources.list.d | \
+    xargs -r sed -i "s#deb.debian.org/debian-security#archive.debian.org/debian-security#"
+
 # System requirements:
 # 1. gettext: Required by envsubst used in scripts
 # 2. openwisp-radius/weasyprint: libcairo2 libpangocairo-1.0
